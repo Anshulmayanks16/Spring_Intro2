@@ -1,29 +1,24 @@
 package com.SpringNew.SpringNew;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/greeting")
 public class GreetingController {
 
-    @GetMapping("/{name}")
-    public GreetingDTO getGreeting(@PathVariable String name) {
-        return new GreetingDTO("Hello " + name + "!");
+    private final GreetingService greetingService;
+
+    @Autowired
+    public GreetingController(GreetingService greetingService) {
+        this.greetingService = greetingService;
     }
 
-    @PostMapping
-    public GreetingDTO createGreeting(@RequestBody GreetingDTO greeting) {
-        return new GreetingDTO("Greeting received: " + greeting.getMessage());
-    }
-
-    @PutMapping("/{name}")
-    public GreetingDTO updateGreeting(@PathVariable String name, @RequestBody GreetingDTO greeting) {
-        return new GreetingDTO("Updated greeting for " + name + ": " + greeting.getMessage());
-    }
-
-    @DeleteMapping("/{name}")
-    public GreetingDTO deleteGreeting(@PathVariable String name) {
-        return new GreetingDTO("Greeting for " + name + " deleted.");
+    @GetMapping("/message")
+    public ResponseEntity<String> getGreetingMessage() {
+        return ResponseEntity.ok(greetingService.getGreeting());
     }
 }
-
